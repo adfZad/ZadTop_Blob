@@ -31,8 +31,13 @@ jobs:
         shell: powershell
         run: .\build_and_publish.ps1
 
-      - name: Publish to folder
-        run: msbuild /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="\published\"
+      - name: Prepare Publish Directory
+        shell: cmd
+        run: |
+          mkdir published
+          robocopy Portal published /E /XD .svn .git obj bin\Debug bin\Release
+          if %ERRORLEVEL% LEQ 8 exit 0
+          exit 1
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
