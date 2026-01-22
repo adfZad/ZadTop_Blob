@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>ZadHolding.Data</AssemblyName>
+    <PackageOutputPath>bin\Release</PackageOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Data.DataSetExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EnterpriseLibrary.Common" Version="6.0.1304" />
+    <PackageReference Include="EnterpriseLibrary.Data" Version="6.0.1304" />
+    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Been\Been.csproj" />
+  </ItemGroup>
+</Project>

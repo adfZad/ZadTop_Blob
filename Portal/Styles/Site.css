@@ -1,0 +1,273 @@
+﻿body {
+    background-color: #eee;
+}
+
+.side-nav .logo-sn {
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+}
+
+    .side-nav .logo-sn img {
+        height: 38px;
+    }
+
+.side-nav .search-form input[type=text] {
+    margin-top: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.accordion .card {
+    margin-bottom: 1.2rem;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+    .accordion .card .card-body {
+        border-top: 1px solid #eee;
+    }
+
+.langs {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.setLang img {
+    padding: 2px;
+}
+
+.active-lang {
+    border: 2px solid #00ff21;
+}
+
+div.error {
+    position: relative;
+    top: -1rem;
+    left: 0rem;
+    font-size: 0.8rem;
+    color: #CC0000;
+    -webkit-transform: translateY(0%);
+    -ms-transform: translateY(0%);
+    -o-transform: translateY(0%);
+    transform: translateY(0%);
+}
+
+.select-default {
+    height: 54px !important;
+    border: none;
+    border-bottom: 1px solid #bdbdbd;
+    /*box-shadow: 0 1px 0 0 #bdbdbd;*/
+}
+
+    .select-default.valid {
+        border-bottom: 1px solid #00C851;
+        box-shadow: 0 1px 0 0 #00C851;
+    }
+.checkbox-primary-filled [type="checkbox"][class*='filled-in']:checked + label:after {
+    border-color: #4285F4 !important;
+    background-color: #4285F4 !important;
+}
+
+.page-footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.page-footer-arrangement{
+    padding-bottom:80px;
+}
+.btn-floating{
+    z-index:0 !important;
+}
+/* Create the blue navigation bar */
+.navbar {
+    background-color: #3b5998;
+    font-size: 22px;
+    padding: 5px 10px;
+}
+
+/* Define how each icon button should look like */
+.button {
+    color: white;
+    display: inline-block; /* Inline elements with width and height. TL;DR they make the icon buttons stack from left-to-right instead of top-to-bottom */
+    position: relative; /* All 'absolute'ly positioned elements are relative to this one */
+    padding: 2px 5px; /* Add some padding so it looks nice */
+}
+
+/* Make the badge float in the top right corner of the button */
+.button__badge {
+    background-color: #fa3e3e;
+    border-radius: 2px;
+    color: white;
+    padding: 0px 6px;
+    font-size: 12px;
+    position: absolute; /* Position the badge within the relatively positioned button */
+    top: 0;
+    right: 0;
+}
+#dvNotification.dropdown-menu:before {
+    content: "";
+    position: absolute;
+    top: -20px;
+    right: 12px;
+    border: 10px solid #343A40;
+    border-color: transparent transparent #324a66 transparent;
+}
+#dvNotification.dropdown-menu {
+    top: 44px;
+    right: 0px;
+    left: unset;
+    width: 460px;
+    box-shadow: 0px 5px 7px -1px #c1c1c1;
+    padding-bottom: 0px;
+    padding: 0px;
+}
+.bg-gray {
+    background-color: #eee;
+}
+.head {
+    padding: 5px 15px;
+    border-radius: 3px 3px 0px 0px;
+    background-color: #3f5c80;
+    text-align:center;
+}
+.notification-icon {
+    font-size: 40px !important;
+    padding-top: 15px !important;
+    padding-left: 20px !important;
+}
+
+.scroll-notification {
+    max-height: 300px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.notification-date {
+    float: right;
+    padding-right: 5px;
+}
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgb(255, 255, 255);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+    ::-webkit-scrollbar-thumb:window-inactive {
+        background: rgb(255, 255, 255);
+    }
+.select-default+label {
+    top: -14px !important;
+    font-size: 13px !important;
+}
+
+.switch-version {
+    position: fixed;
+    width: 80px;
+    right: 0;
+    top: 300px;
+}
+
+.switch-version-left {
+    position: fixed;
+    width: 80px;
+    left: 0;
+    top: 300px;
+}
+
+.switch-to-left {
+    display: block;
+    width: 80px;
+    height: 40px;
+    background-repeat: no-repeat;
+    padding-top: 13px;
+    border-top-right-radius: 14px;
+    border-bottom-right-radius: 14px;
+}
+.switch-to {
+    display: block;
+    width: 80px;
+    height: 40px;
+    background-repeat: no-repeat;
+    padding-top: 13px;
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+}
+
+    .intl-tel-input input, .intl-tel-input input[type=text], .intl-tel-input input[type=tel] {
+        position: relative;
+        z-index: 0;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        margin-right: 0;
+    }
+    .intl-tel-input * {
+        -moz-box-sizing: border-box;
+    }
+.flag-container {
+    margin-bottom: -25px !important;
+}
+.intl-tel-input input[type=text] {
+    top: -52px !important;
+    left: 80px !important;
+    width: 60% !important;
+}
+.flag-container div.error {
+    top: -3rem;
+}
+.intl-tel-input select{
+    width:32% !important;
+    font-size:12px;
+}
+.select-default:disabled + label {
+    color: rgba(0, 0, 0, 0.46);
+    background-color: transparent;
+}
+
+.custom-select {
+    display: inline !important;
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    font-size: 75%;
+    border-radius: 0.25rem;
+    margin: 0;
+}
+
+.table tr td {
+    height: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.table tr th {
+    height: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+.paginate_button {
+    z-index: 0;
+}
+
+.page-item.active .page-link {
+    color: #000;
+    background-color: #eaeaea;
+    border-color: #eaeaea;
+}

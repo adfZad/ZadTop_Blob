@@ -1,0 +1,99 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11408.92
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Been", "Modules\Been\Been.csproj", "{65E7EABF-C512-4F44-AC2B-1202B3DCD98E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "Modules\Business\Business.csproj", "{D11E462A-A839-47DF-868C-0F46FEA1CA17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Modules\Data\Data.csproj", "{8002FEDE-FC17-4247-BE84-F3D1C0FDA176}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortalBase", "Modules\PortalBase\PortalBase.csproj", "{9E9F6300-83D9-4820-B4BB-E517E25EABA8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{F7A6055B-8BE0-4518-9323-A5EEB9F8D26E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Modules\Utilities\Utilities.csproj", "{C8BDDE67-E1A9-4077-AF96-0CD36974CCA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pager", "Modules\Pager\Pager.csproj", "{DDA4682F-257E-4920-A586-35E5F504CB6C}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "ZadSAP-Site/ZadTop", "http://localhost/ZadTop", "{338ED7DA-3EBA-48D5-ABEE-7F35763F59AB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{65E7EABF-C512-4F44-AC2B-1202B3DCD98E} = {65E7EABF-C512-4F44-AC2B-1202B3DCD98E}
+		{8002FEDE-FC17-4247-BE84-F3D1C0FDA176} = {8002FEDE-FC17-4247-BE84-F3D1C0FDA176}
+		{9E9F6300-83D9-4820-B4BB-E517E25EABA8} = {9E9F6300-83D9-4820-B4BB-E517E25EABA8}
+		{C8BDDE67-E1A9-4077-AF96-0CD36974CCA2} = {C8BDDE67-E1A9-4077-AF96-0CD36974CCA2}
+		{D11E462A-A839-47DF-868C-0F46FEA1CA17} = {D11E462A-A839-47DF-868C-0F46FEA1CA17}
+		{DDA4682F-257E-4920-A586-35E5F504CB6C} = {DDA4682F-257E-4920-A586-35E5F504CB6C}
+	EndProjectSection
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "false"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
+		Debug.AspNetCompiler.VirtualPath = "/ZadTop"
+		Debug.AspNetCompiler.PhysicalPath = "Portal\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\ZadTop\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/ZadTop"
+		Release.AspNetCompiler.PhysicalPath = "Portal\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\ZadTop\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "Portal\"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{65E7EABF-C512-4F44-AC2B-1202B3DCD98E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65E7EABF-C512-4F44-AC2B-1202B3DCD98E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65E7EABF-C512-4F44-AC2B-1202B3DCD98E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65E7EABF-C512-4F44-AC2B-1202B3DCD98E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D11E462A-A839-47DF-868C-0F46FEA1CA17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D11E462A-A839-47DF-868C-0F46FEA1CA17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D11E462A-A839-47DF-868C-0F46FEA1CA17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D11E462A-A839-47DF-868C-0F46FEA1CA17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8002FEDE-FC17-4247-BE84-F3D1C0FDA176}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8002FEDE-FC17-4247-BE84-F3D1C0FDA176}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8002FEDE-FC17-4247-BE84-F3D1C0FDA176}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8002FEDE-FC17-4247-BE84-F3D1C0FDA176}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E9F6300-83D9-4820-B4BB-E517E25EABA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E9F6300-83D9-4820-B4BB-E517E25EABA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E9F6300-83D9-4820-B4BB-E517E25EABA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E9F6300-83D9-4820-B4BB-E517E25EABA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8BDDE67-E1A9-4077-AF96-0CD36974CCA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8BDDE67-E1A9-4077-AF96-0CD36974CCA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8BDDE67-E1A9-4077-AF96-0CD36974CCA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8BDDE67-E1A9-4077-AF96-0CD36974CCA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDA4682F-257E-4920-A586-35E5F504CB6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDA4682F-257E-4920-A586-35E5F504CB6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDA4682F-257E-4920-A586-35E5F504CB6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDA4682F-257E-4920-A586-35E5F504CB6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{338ED7DA-3EBA-48D5-ABEE-7F35763F59AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{338ED7DA-3EBA-48D5-ABEE-7F35763F59AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{338ED7DA-3EBA-48D5-ABEE-7F35763F59AB}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{338ED7DA-3EBA-48D5-ABEE-7F35763F59AB}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{65E7EABF-C512-4F44-AC2B-1202B3DCD98E} = {F7A6055B-8BE0-4518-9323-A5EEB9F8D26E}
+		{D11E462A-A839-47DF-868C-0F46FEA1CA17} = {F7A6055B-8BE0-4518-9323-A5EEB9F8D26E}
+		{8002FEDE-FC17-4247-BE84-F3D1C0FDA176} = {F7A6055B-8BE0-4518-9323-A5EEB9F8D26E}
+		{9E9F6300-83D9-4820-B4BB-E517E25EABA8} = {F7A6055B-8BE0-4518-9323-A5EEB9F8D26E}
+		{C8BDDE67-E1A9-4077-AF96-0CD36974CCA2} = {F7A6055B-8BE0-4518-9323-A5EEB9F8D26E}
+		{DDA4682F-257E-4920-A586-35E5F504CB6C} = {F7A6055B-8BE0-4518-9323-A5EEB9F8D26E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Data.6.0.1304.0\lib\NET45
+		SolutionGuid = {863F5622-8E41-4949-9A5E-D98B355DFF13}
+	EndGlobalSection
+EndGlobal
