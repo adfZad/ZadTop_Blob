@@ -108,7 +108,7 @@ jobs:
         shell: powershell
         run: |
           Write-Host "Deploying site.zip to RG: $env:RG"
-          az webapp deploy --resource-group $env:RG --name ZadTop1 --src-path site.zip --type zip --async false
+          az webapp deploy --resource-group $env:RG --name ZadTop1 --src-path publish\site.zip --type zip --async false
 
       - name: Start Web App
         shell: powershell
