@@ -71,5 +71,35 @@ foreach ($projRelativePath in $projects) {
     }
 }
 
+
+Write-Host "`n-------------------------------------------"
+Write-Host "Restoring Portal Packages..."
+nuget restore (Join-Path $workspaceRoot "Portal\packages.config") -PackagesDirectory (Join-Path $workspaceRoot "packages")
+
+Write-Host "Copying iTextSharp..."
+$itextSharpPath = Join-Path $workspaceRoot "packages\iTextSharp.5.5.13.4\lib\itextsharp.dll"
+# Path might be inside net48 folder or similar depending on package structure, but usually lib directly or lib/netxx
+# Check common path pattern for this package version
+$itextSharpPath = Join-Path $workspaceRoot "packages\iTextSharp.5.5.13.4\lib\itextsharp.dll" 
+if (-not (Test-Path $itextSharpPath)) {
+    # Try alternate path style
+    $itextSharpPath = Join-Path $workspaceRoot "packages\iTextSharp.5.5.13.4\lib\net40-client\itextsharp.dll"
+    if (-not (Test-Path $itextSharpPath)) {
+        $itextSharpPath = Join-Path $workspaceRoot "packages\iTextSharp.5.5.13.4\lib\itextsharp.dll" # Fallback/Retry logic or just assume standard if simple
+    }
+}
+
+# Actually, let's just do a wildcard search in the specific package folder to be safe
+$packageDir = Join-Path $workspaceRoot "packages\iTextSharp.5.5.13.4"
+$dlls = Get-ChildItem -Path $packageDir -Filter "itextsharp.dll" -Recurse
+if ($dlls) {
+    $dll = $dlls | Select-Object -First 1
+    Copy-Item -Path $dll.FullName -Destination $portalBin -Force
+    Write-Host "Copied iTextSharp from $($dll.FullName)"
+}
+else {
+    Write-Warning "Could not find iTextSharp.dll in packages folder."
+}
+
 Write-Host "`n-------------------------------------------"
 Write-Host "Build and Publish to Portal/Bin COMPLETED SUCCESSFULLY."
