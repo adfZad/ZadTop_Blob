@@ -69,6 +69,14 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EC9F31AB4ED146CB83C44847D4F28441 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_42CDEA0B68C146A59674F4C5F0562F3C }}
 
+      - name: Stop Web App
+        shell: powershell
+        run: |
+          $rg = az webapp list --query "[?name=='ZadTop1'].resourceGroup" -o tsv
+          echo "Resource Group: $rg"
+          echo "RG=$rg" >> $env:GITHUB_ENV
+          az webapp stop --name ZadTop1 --resource-group $rg
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
@@ -76,4 +84,10 @@ jobs:
           app-name: 'ZadTop1'
           slot-name: 'Production'
           package: site.zip
+
+      - name: Start Web App
+        shell: powershell
+        if: always()
+        run: |
+           az webapp start --name ZadTop1 --resource-group $env:RG
           
