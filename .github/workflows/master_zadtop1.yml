@@ -71,5 +71,5 @@ jobs:
         with:
           app-name: 'ZadTop1'
           slot-name: 'Production'
-          package: .
+          package: published
           
