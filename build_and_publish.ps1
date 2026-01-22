@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$workspaceRoot = "d:\Gravity\ZadTop1"
+$workspaceRoot = $PSScriptRoot
 $portalBin = Join-Path $workspaceRoot "Portal\Bin"
 
 Write-Host "Starting Build and Publish Process..."
