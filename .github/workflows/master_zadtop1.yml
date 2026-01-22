@@ -41,7 +41,7 @@ jobs:
 
       - name: Verify Publish Content
         shell: cmd
-        run:dir published
+        run: dir published
 
       - name: Zip Publish Directory
         shell: powershell
@@ -64,7 +64,8 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: ASP-app
+          name: published-app
+          path: publish
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -76,20 +77,47 @@ jobs:
       - name: Stop Web App
         shell: powershell
         run: |
+          # Try to get RG from list
           $rg = az webapp list --query "[?name=='ZadTop1'].resourceGroup" -o tsv
-          echo "Resource Group: $rg"
-          echo "RG=$rg" >> $env:GITHUB_ENV
+          
+          # Fallback or Verify
+          if (-not $rg) {
+              Write-Host "RG not found via list. Checking specific app show..."
+              try {
+                  $rg = az webapp show --name ZadTop1 --query resourceGroup -o tsv
+              } catch {
+                  Write-Warning "Failed to show app ZadTop1"
+              }
+          }
+
+          if (-not $rg) {
+              Write-Error "CRITICAL: Could not find Resource Group for 'ZadTop1'. Deployment cannot proceed."
+              exit 1
+          }
+
+          Write-Host "Target Resource Group: '$rg'"
+          "RG=$rg" | Out-File -FilePath $env:GITHUB_ENV -Append
+          
+          Write-Host "Stopping Web App..."
           az webapp stop --name ZadTop1 --resource-group $rg
+          
+          Write-Host "Waiting for file locks to release..."
           Start-Sleep -Seconds 20
 
       - name: Deploy to Azure Web App (CLI)
         shell: powershell
         run: |
+          Write-Host "Deploying site.zip to RG: $env:RG"
           az webapp deploy --resource-group $env:RG --name ZadTop1 --src-path site.zip --type zip --async false
 
       - name: Start Web App
         shell: powershell
         if: always()
         run: |
-           az webapp start --name ZadTop1 --resource-group $env:RG
+           if ($env:RG) {
+               Write-Host "Starting Web App..."
+               az webapp start --name ZadTop1 --resource-group $env:RG
+           } else {
+               Write-Warning "Resource Group not set, cannot start app."
+           }
           
