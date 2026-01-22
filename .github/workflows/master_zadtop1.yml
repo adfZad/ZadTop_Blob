@@ -39,6 +39,10 @@ jobs:
           if %ERRORLEVEL% LEQ 8 exit 0
           exit 1
 
+      - name: Verify Publish Content
+        shell: cmd
+        run:dir published
+
       - name: Zip Publish Directory
         shell: powershell
         run: Compress-Archive -Path published\* -DestinationPath site.zip
@@ -76,14 +80,12 @@ jobs:
           echo "Resource Group: $rg"
           echo "RG=$rg" >> $env:GITHUB_ENV
           az webapp stop --name ZadTop1 --resource-group $rg
+          Start-Sleep -Seconds 20
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'ZadTop1'
-          slot-name: 'Production'
-          package: site.zip
+      - name: Deploy to Azure Web App (CLI)
+        shell: powershell
+        run: |
+          az webapp deploy --resource-group $env:RG --name ZadTop1 --src-path site.zip --type zip --async false
 
       - name: Start Web App
         shell: powershell
