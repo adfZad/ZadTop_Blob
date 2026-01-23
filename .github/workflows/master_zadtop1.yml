@@ -27,20 +27,21 @@ jobs:
       - name: Restore NuGet packages
         run: nuget restore
 
-      # REAL publish for ASP.NET (.NET Framework 4.8)
-      - name: Build & Publish
-        run: >
-          msbuild Portal/Portal.csproj
-          /p:Configuration=Release
-          /p:DeployOnBuild=true
-          /p:WebPublishMethod=FileSystem
-          /p:PublishUrl=publish
+      - name: Build Modules and Populate Portal/Bin
+        shell: powershell
+        run: .\build_and_publish.ps1
+
+      - name: Prepare Publish Directory
+        shell: cmd
+        run: |
+          mkdir published
+          robocopy Portal published /E /XD .svn .git obj bin\Debug bin\Release
+          if %ERRORLEVEL% LEQ 8 exit 0
+          exit 1
 
       - name: Verify Publish Content
         shell: cmd
-        run: |
-          dir publish
-          if not exist publish\web.config exit 1
+        run: dir published
 
       - name: Zip Publish Directory
         shell: powershell
