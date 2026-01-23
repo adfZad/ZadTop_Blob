@@ -10,10 +10,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: windows-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      id-token: write # Required for requesting the JWT
+      contents: read  # Required for actions/checkout
 
     steps:
       - uses: actions/checkout@v4
@@ -47,26 +48,6 @@ jobs:
         shell: powershell
         run: Compress-Archive -Path published\* -DestinationPath site.zip -Force
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ASP-app
-          path: site.zip
-
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: ASP-app
-          path: .
-
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -87,4 +68,3 @@ jobs:
         with:
           app-name: ZadTop1
           package: site.zip
-          
