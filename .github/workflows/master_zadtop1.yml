@@ -43,11 +43,15 @@ jobs:
         shell: cmd
         run: dir published
 
+      - name: Zip Publish Directory
+        shell: powershell
+        run: Compress-Archive -Path published\* -DestinationPath site.zip
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: ASP-app
-          path: published
+          path: site.zip
 
   deploy:
     runs-on: windows-latest
@@ -70,10 +74,17 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EC9F31AB4ED146CB83C44847D4F28441 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_42CDEA0B68C146A59674F4C5F0562F3C }}
 
+      - name: Enable Run From Package
+        shell: powershell
+        run: |
+          $rg = az webapp list --query "[?name=='ZadTop1'].resourceGroup" -o tsv
+          if (-not $rg) { $rg = "ZadHolding" } # Fallback
+          Write-Host "Setting WEBSITE_RUN_FROM_PACKAGE=1 for $rg/ZadTop1"
+          az webapp config appsettings set --name ZadTop1 --resource-group $rg --settings WEBSITE_RUN_FROM_PACKAGE="1"
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ZadTop1
-          package: publish
-          clean: true
+          package: publish/site.zip
           
