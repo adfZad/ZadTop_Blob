@@ -51,9 +51,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_E2F00791D0D44E669F3C32416238917A }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EC9F31AB4ED146CB83C44847D4F28441 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_42CDEA0B68C146A59674F4C5F0562F3C }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Enable Run From Package
         shell: powershell
