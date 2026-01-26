@@ -48,23 +48,9 @@ jobs:
         shell: powershell
         run: Compress-Archive -Path published\* -DestinationPath site.zip -Force
 
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Enable Run From Package
-        shell: powershell
-        run: |
-          $rg = az webapp list --query "[?name=='ZadTop1'].resourceGroup" -o tsv
-          if (-not $rg) { $rg = "ZadHolding" } # Fallback
-          Write-Host "Setting WEBSITE_RUN_FROM_PACKAGE=1 for $rg/ZadTop1"
-          az webapp config appsettings set --name ZadTop1 --resource-group $rg --settings WEBSITE_RUN_FROM_PACKAGE="1"
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ZadTop1
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: site.zip
