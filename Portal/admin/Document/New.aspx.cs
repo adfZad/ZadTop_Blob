@@ -285,65 +285,24 @@ public partial class admin_Document_New : System.Web.UI.Page
 
     protected string DocPathMethod(string fileName)
     {
-        string path = "#";
-        string localPath = "";
-
-        if (!string.IsNullOrEmpty(fileName))
+        if (string.IsNullOrEmpty(fileName)) return "#";
+        
+        // Optimize: If we trust the file exists or handle 404 in UI, we can skip check.
+        // But to maintain logic:
+        if (FileManager.FileExists(FileType.Passport, fileName))
         {
-            path = string.Format("../../{0}/{1}/{2}/{3}/{4}",
-                WebConfigKeys.UploadImageRootDirectory,
-                FileType.Passport,
-                fileName.Substring(0, 1),
-                fileName.Substring(0, 2),
-                fileName);
-
-            localPath = Server.MapPath(path);
-
-            if (!File.Exists(localPath))
-            {
-                path = "#";
-            }
+            return FileManager.GetSourceDirectory(FileType.Passport, fileName);
         }
-
-        return path;
-
+        return "#";
     }
 
-    protected string LocalDocPathMethod(string fileName)
-    {
-        string path = "#";
-        string localPath = "";
-
-        if (!string.IsNullOrEmpty(fileName))
-        {
-            path = string.Format("../../{0}/{1}/{2}/{3}/{4}",
-                WebConfigKeys.UploadImageRootDirectory,
-                FileType.Passport,
-                fileName.Substring(0, 1),
-                fileName.Substring(0, 2),
-                fileName);
-
-            localPath = Server.MapPath(path);
-
-            if (!File.Exists(localPath))
-            {
-                path = "#";
-            }
-            else
-            {
-                path = localPath;
-            }
-        }
-
-        return path;
-
-    }
+    // LocalDocPathMethod Removed or replaced with logic that doesn't use Server.MapPath for data files
 
     public void textwriter(DocumentInfo documentInfo)
     {
-        string fileNameExisting = LocalDocPathMethod(documentInfo.Primary);
-        string fileNameNew = LocalDocPathMethod(documentInfo.AltDescription);
-        string approvalString = "";
+        // string fileNameExisting = LocalDocPathMethod(documentInfo.Primary);
+        // string fileNameNew = LocalDocPathMethod(documentInfo.AltDescription);
+        
         long totalRows = 0;
         TaskSearchParams taskSearchParams = new TaskSearchParams();
         taskSearchParams.CurrentPage = 1;
@@ -354,18 +313,35 @@ public partial class admin_Document_New : System.Web.UI.Page
         taskSearchParams.TaskStatusId = 3;
         TaskInfoCollection finishedTaskInfoCollection = TaskManager.Search(taskSearchParams, out totalRows);
         System.Drawing.Point p = new System.Drawing.Point(5, 580);
-        AddTextToPdf(fileNameExisting, fileNameNew, approvalString, p, finishedTaskInfoCollection, totalRows);
-
+        
+        using (Stream inputStream = FileManager.GetFileStream(FileType.Passport, documentInfo.Primary))
+        {
+            if (inputStream != null)
+            {
+                 // We need to write to a memory stream then save it
+                 using (MemoryStream outputStream = new MemoryStream())
+                 {
+                     string approvalString = "";
+                     AddTextToPdf(inputStream, outputStream, approvalString, p, finishedTaskInfoCollection, totalRows);
+                     
+                     // Reset position to read
+                     // outputStream.Position = 0; // PdfStamper might close it?
+                     // If PdfStamper closed it, we need new stream from bytes
+                     
+                     using (MemoryStream uploadStream = new MemoryStream(outputStream.ToArray()))
+                     {
+                        FileManager.SaveFile(uploadStream, FileType.Passport, documentInfo.AltDescription);
+                     }
+                 }
+            }
+        }
     }
 
-    public void AddTextToPdf(string inputPdfPath, string outputPdfPath, string textToAdd, System.Drawing.Point point, TaskInfoCollection taskInfoCollection, long totalRows)
+    public void AddTextToPdf(Stream inputPdfStream, Stream outputPdfStream, string textToAdd, System.Drawing.Point point, TaskInfoCollection taskInfoCollection, long totalRows)
     {
-
-        string pathin = inputPdfPath;
-        string pathout = outputPdfPath;
         int i = Convert.ToInt32(totalRows);
-        using (PdfReader reader = new PdfReader(pathin))
-        using (PdfStamper stamper = new PdfStamper(reader, new FileStream(pathout, FileMode.Create)))
+        using (PdfReader reader = new PdfReader(inputPdfStream))
+        using (PdfStamper stamper = new PdfStamper(reader, outputPdfStream))
         {
 
             reader.SelectPages("1");

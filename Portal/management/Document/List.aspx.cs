@@ -66,28 +66,14 @@ public partial class management_Document_List : System.Web.UI.Page
 
     protected string DocPathMethod(string fileName)
     {
-        string path = "#";
-        string localPath = "";
+        if (string.IsNullOrEmpty(fileName)) return "#";
 
-        if (!string.IsNullOrEmpty(fileName))
+        if (FileManager.FileExists(FileType.Passport, fileName))
         {
-            path = string.Format("../../{0}/{1}/{2}/{3}/{4}",
-                WebConfigKeys.UploadImageRootDirectory,
-                FileType.Passport,
-                fileName.Substring(0, 1),
-                fileName.Substring(0, 2),
-                fileName);
-
-            localPath = Server.MapPath(path);
-
-            if (!File.Exists(localPath))
-            {
-                path = "#";
-            }
+            return FileManager.GetSourceDirectory(FileType.Passport, fileName);
         }
 
-        return path;
-
+        return "#";
     }
     
 }
