@@ -7,7 +7,7 @@ namespace ZadHolding.Utilities
 {
     public class LocalFileStorage : IFileStorage
     {
-        public string SaveFile(HttpPostedFile file, string directory, string fileName)
+        public string SaveFile(HttpPostedFile file, string directory, string fileName, System.Collections.Generic.Dictionary<string, string> metadata = null)
         {
             string rootDirectory = HttpContext.Current.Server.MapPath(@"~\" + WebConfigKeys.UploadImageRootDirectory);
             string filePath = Path.Combine(rootDirectory, directory);
@@ -23,7 +23,7 @@ namespace ZadHolding.Utilities
             return fullPath;
         }
 
-        public void SaveFile(Stream stream, string directory, string fileName)
+        public void SaveFile(Stream stream, string directory, string fileName, System.Collections.Generic.Dictionary<string, string> metadata = null)
         {
             string rootDirectory = HttpContext.Current.Server.MapPath(@"~\" + WebConfigKeys.UploadImageRootDirectory);
             string filePath = Path.Combine(rootDirectory, directory);

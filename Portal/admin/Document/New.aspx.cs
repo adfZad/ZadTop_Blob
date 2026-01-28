@@ -40,21 +40,27 @@ public partial class admin_Document_New : System.Web.UI.Page
     {
         try
         {
-            
-            FileManager.SaveFile(fupRegistration, FileType.Passport, documentInfo.Primary);
-            FileManager.SaveFile(fupRegistration, FileType.Passport, documentInfo.AltDescription);
+            var metadata = new Dictionary<string, string>
+            {
+                { "RequestDate", DateTime.Now.ToString("yyyy-MM-dd") },
+                { "RequestStatus", "Pending" },
+                { "UploadedBy", PortalUser.Current.UserId.ToString() }
+            };
+
+            FileManager.SaveFile(fupRegistration, FileType.Passport, documentInfo.Primary, metadata);
+            FileManager.SaveFile(fupRegistration, FileType.Passport, documentInfo.AltDescription, metadata);
             if (fupOne.HasFile)
-              FileManager.SaveFile(fupOne, FileType.Passport, documentInfo.One);
+              FileManager.SaveFile(fupOne, FileType.Passport, documentInfo.One, metadata);
             if (fupTwo.HasFile)
-            FileManager.SaveFile(fupTwo, FileType.Passport, documentInfo.Two);
+            FileManager.SaveFile(fupTwo, FileType.Passport, documentInfo.Two, metadata);
             if (fupThree.HasFile)
-            FileManager.SaveFile(fupThree, FileType.Passport, documentInfo.Three);
+            FileManager.SaveFile(fupThree, FileType.Passport, documentInfo.Three, metadata);
             if (fupFour.HasFile)
-                FileManager.SaveFile(fupFour, FileType.Passport, documentInfo.Four);
+                FileManager.SaveFile(fupFour, FileType.Passport, documentInfo.Four, metadata);
             if (fupFive.HasFile)
-                FileManager.SaveFile(fupFive, FileType.Passport, documentInfo.Five);
+                FileManager.SaveFile(fupFive, FileType.Passport, documentInfo.Five, metadata);
             if (fupSix.HasFile)
-                FileManager.SaveFile(fupSix, FileType.Passport, documentInfo.Six);
+                FileManager.SaveFile(fupSix, FileType.Passport, documentInfo.Six, metadata);
           
         }
         catch
@@ -330,7 +336,13 @@ public partial class admin_Document_New : System.Web.UI.Page
                      
                      using (MemoryStream uploadStream = new MemoryStream(outputStream.ToArray()))
                      {
-                        FileManager.SaveFile(uploadStream, FileType.Passport, documentInfo.AltDescription);
+                        var metadata = new Dictionary<string, string>
+                        {
+                            { "RequestDate", DateTime.Now.ToString("yyyy-MM-dd") },
+                            { "RequestStatus", "Pending" },
+                            { "UploadedBy", PortalUser.Current.UserId.ToString() }
+                        };
+                        FileManager.SaveFile(uploadStream, FileType.Passport, documentInfo.AltDescription, metadata);
                      }
                  }
             }

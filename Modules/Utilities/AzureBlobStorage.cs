@@ -3,6 +3,7 @@ using System.IO;
 using System.Web;
 using System.Configuration;
 using Azure.Storage.Blobs; // Requires Azure.Storage.Blobs NuGet package
+using Azure.Storage.Blobs.Models;
 using ZadHolding.PortalBase;
 
 namespace ZadHolding.Utilities
@@ -18,7 +19,7 @@ namespace ZadHolding.Utilities
             _containerName = System.Configuration.ConfigurationManager.AppSettings["AzureStorageContainerName"];
         }
 
-        public string SaveFile(HttpPostedFile file, string directory, string fileName)
+        public string SaveFile(HttpPostedFile file, string directory, string fileName, System.Collections.Generic.Dictionary<string, string> metadata = null)
         {
             // directory format from FileManager is: fileType \ fileName(0,1) \ fileName(0,2) \
             // We can flatten this or keep it. Blob storage supports slashes in names to simulate folders.
@@ -29,21 +30,23 @@ namespace ZadHolding.Utilities
             BlobServiceClient blobServiceClient = new BlobServiceClient(_connectionString);
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
             // containerClient.CreateIfNotExists();
-            // Allow public access? Or assumes SAS? 
-            // For now, let's assume public container or we will just upload.
-            // Usually we set access policy on the container.
             
             BlobClient blobClient = containerClient.GetBlobClient(blobPath);
             
+            var options = new BlobUploadOptions
+            {
+                Tags = metadata
+            };
+
             using (var stream = file.InputStream)
             {
-                blobClient.Upload(stream, true);
+                blobClient.Upload(stream, options);
             }
 
             return blobClient.Uri.ToString();
         }
 
-        public void SaveFile(Stream stream, string directory, string fileName)
+        public void SaveFile(Stream stream, string directory, string fileName, System.Collections.Generic.Dictionary<string, string> metadata = null)
         {
             string blobPath = Path.Combine(directory, fileName).Replace("\\", "/");
             
@@ -59,7 +62,12 @@ namespace ZadHolding.Utilities
                 stream.Position = 0;
             }
             
-            blobClient.Upload(stream, true);
+            var options = new BlobUploadOptions
+            {
+                Tags = metadata
+            };
+
+            blobClient.Upload(stream, options);
         }
 
         public string GetFileUrl(string directory, string fileName)

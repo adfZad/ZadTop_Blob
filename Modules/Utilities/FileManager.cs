@@ -67,7 +67,7 @@ namespace ZadHolding.Utilities
              return string.Format(@"{0}\{1}\{2}\", fileType, fileName.Substring(0, 1), fileName.Substring(0, 2));
         }
 
-        public static bool SaveFile(System.Web.UI.WebControls.FileUpload file, FileType fileType, string fileName)
+        public static bool SaveFile(System.Web.UI.WebControls.FileUpload file, FileType fileType, string fileName, System.Collections.Generic.Dictionary<string, string> metadata = null)
         {
             bool result = true;
 
@@ -80,7 +80,7 @@ namespace ZadHolding.Utilities
                 //else
                 //{
                     string directory = GetStorageDirectory(fileType, fileName);
-                    _storage.SaveFile(file.PostedFile, directory, fileName);
+                    _storage.SaveFile(file.PostedFile, directory, fileName, metadata);
                     
                 //}
             }
@@ -93,10 +93,10 @@ namespace ZadHolding.Utilities
             return result;
         }
 
-        public static void SaveFile(Stream stream, FileType fileType, string fileName)
+        public static void SaveFile(Stream stream, FileType fileType, string fileName, System.Collections.Generic.Dictionary<string, string> metadata = null)
         {
              string directory = GetStorageDirectory(fileType, fileName);
-             _storage.SaveFile(stream, directory, fileName);
+             _storage.SaveFile(stream, directory, fileName, metadata);
         }
 
         public static Stream GetFileStream(FileType fileType, string fileName)
