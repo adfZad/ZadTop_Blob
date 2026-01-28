@@ -101,5 +101,15 @@ else {
     Write-Warning "Could not find iTextSharp.dll in packages folder."
 }
 
+Write-Host "Copying System.Diagnostics.DiagnosticSource..."
+$diagSourcePath = Join-Path $workspaceRoot "packages\System.Diagnostics.DiagnosticSource.4.7.1\lib\net46\System.Diagnostics.DiagnosticSource.dll"
+if (Test-Path $diagSourcePath) {
+    Copy-Item -Path $diagSourcePath -Destination $portalBin -Force
+    Write-Host "Copied System.Diagnostics.DiagnosticSource from $diagSourcePath"
+}
+else {
+    Write-Warning "Could not find System.Diagnostics.DiagnosticSource.dll at $diagSourcePath"
+}
+
 Write-Host "`n-------------------------------------------"
 Write-Host "Build and Publish to Portal/Bin COMPLETED SUCCESSFULLY."
