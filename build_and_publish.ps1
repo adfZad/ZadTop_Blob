@@ -111,5 +111,15 @@ else {
     Write-Warning "Could not find System.Diagnostics.DiagnosticSource.dll at $diagSourcePath"
 }
 
+Write-Host "Copying System.Text.Encodings.Web..."
+$encWebPath = Join-Path $workspaceRoot "packages\System.Text.Encodings.Web.4.7.2\lib\net461\System.Text.Encodings.Web.dll"
+if (Test-Path $encWebPath) {
+    Copy-Item -Path $encWebPath -Destination $portalBin -Force
+    Write-Host "Copied System.Text.Encodings.Web from $encWebPath"
+}
+else {
+    Write-Warning "Could not find System.Text.Encodings.Web.dll at $encWebPath"
+}
+
 Write-Host "`n-------------------------------------------"
 Write-Host "Build and Publish to Portal/Bin COMPLETED SUCCESSFULLY."
