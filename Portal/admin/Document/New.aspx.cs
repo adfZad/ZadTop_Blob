@@ -42,6 +42,8 @@ public partial class admin_Document_New : System.Web.UI.Page
         {
             var metadata = new Dictionary<string, string>
             {
+                { "ReferenceNo", documentInfo.Name },
+                { "DocumentType", ddlType.SelectedItem.Text },
                 { "RequestDate", DateTime.Now.ToString("yyyy-MM-dd") },
                 { "RequestStatus", "Pending" },
                 { "UploadedBy", PortalUser.Current.UserId.ToString() }
@@ -63,8 +65,10 @@ public partial class admin_Document_New : System.Web.UI.Page
                 FileManager.SaveFile(fupSix, FileType.Passport, documentInfo.Six, metadata);
           
         }
-        catch
-        { }
+        catch (Exception ex)
+        {
+            Response.Write("<script>alert('Error in SaveFiles: " + ex.Message.Replace("'", "\\'") + "');</script>");
+        }
     }
 
     protected void cvImage_ServerValidate(object source, ServerValidateEventArgs args)
@@ -110,112 +114,130 @@ public partial class admin_Document_New : System.Web.UI.Page
 
     protected void btnSave_Click(object sender, EventArgs e)
     {
-        if (Page.IsValid)
+        try
         {
-            DocumentInfo documentInfo = new DocumentInfo();
-
-            long lvalue = 0;
-            decimal dvalue = 0;
-
-            documentInfo.Name = txtName.Text.Trim();
-
-            long.TryParse(ddlFlow.SelectedItem.Value, out lvalue);
-            documentInfo.FlowId = lvalue;
-
-            long.TryParse(ddlType.SelectedItem.Value, out lvalue);
-            documentInfo.TypeId = lvalue;
-
-            decimal.TryParse(txtAmount.Text.Trim(), out dvalue);
-            documentInfo.Amount = dvalue;
-
-            documentInfo.Currency = txtCurrency.Text.Trim();
-           
-            decimal.TryParse(txtExchangeRate.Text.Trim(), out dvalue);
-            documentInfo.Rate = dvalue;
-
-            decimal.TryParse(txtOtherAmount.Text.Trim(), out dvalue);
-            documentInfo.OtherAmount = dvalue;
-
-            documentInfo.Active = true;
-            documentInfo.Description = txtDesc.Text.Trim();
-            documentInfo.Purpose = txtPurpose.Text.Trim();
-            documentInfo.AltDescription = txtDesc.Text.Trim();
-            documentInfo.CreatedId = PortalUser.Current.UserId;
-            documentInfo.CreatedTime = DateTime.Now;
-            documentInfo.UpdatedId = PortalUser.Current.UserId;
-            documentInfo.UpdatedTime = DateTime.Now;
-            documentInfo.DocumentStatusId = 2;
-            documentInfo.AmendNo = 0;
-
-            documentInfo.Primary = FileManager.GenerateUniqueName(FileType.Passport);
-            documentInfo.AltDescription = FileManager.GenerateUniqueName(FileType.Passport);
-
-            if (fupOne.HasFile)
+            if (Page.IsValid)
             {
-                documentInfo.One = FileManager.GenerateUniqueName(FileType.Passport);
-                documentInfo.OneName = txtOne.Text.ToString();
-            }
-            if (fupTwo.HasFile)
-            {
-                documentInfo.Two = FileManager.GenerateUniqueName(FileType.Passport);
-                documentInfo.TwoName = txtTwo.Text.ToString();
-            }
-            if (fupThree.HasFile)
-            {
-                documentInfo.Three = FileManager.GenerateUniqueName(FileType.Passport);
-                documentInfo.ThreeName = txtThree.Text.ToString();
-            }
-            if (fupFour.HasFile)
-            {
-                documentInfo.Four = FileManager.GenerateUniqueName(FileType.Passport);
-                documentInfo.FourName = txtFour.Text.ToString();
-            }
-            if (fupFive.HasFile)
-            {
-                documentInfo.Five = FileManager.GenerateUniqueName(FileType.Passport);
-                documentInfo.FiveName = txtFive.Text.ToString();
-            }
-            if (fupSix.HasFile)
-            {
-                documentInfo.Six = FileManager.GenerateUniqueName(FileType.Passport);
-                documentInfo.SixName = txtSix.Text.ToString();
-            }
+                DocumentInfo documentInfo = new DocumentInfo();
 
-            byte result = DocumentManager.Insert(documentInfo);
-            if (result == 1)
-            {
-                SaveFiles(documentInfo);
-                Insert_Create_Task(documentInfo.Id);
-                foreach (TemplateInfo templateInfo in templateInfoCollection)
+                long lvalue = 0;
+                decimal dvalue = 0;
+
+                documentInfo.Name = txtName.Text.Trim();
+
+                long.TryParse(ddlFlow.SelectedItem.Value, out lvalue);
+                documentInfo.FlowId = lvalue;
+
+                long.TryParse(ddlType.SelectedItem.Value, out lvalue);
+                documentInfo.TypeId = lvalue;
+
+                decimal.TryParse(txtAmount.Text.Trim(), out dvalue);
+                documentInfo.Amount = dvalue;
+
+                documentInfo.Currency = txtCurrency.Text.Trim();
+            
+                decimal.TryParse(txtExchangeRate.Text.Trim(), out dvalue);
+                documentInfo.Rate = dvalue;
+
+                decimal.TryParse(txtOtherAmount.Text.Trim(), out dvalue);
+                documentInfo.OtherAmount = dvalue;
+
+                documentInfo.Active = true;
+                documentInfo.Description = txtDesc.Text.Trim();
+                documentInfo.Purpose = txtPurpose.Text.Trim();
+                documentInfo.AltDescription = txtDesc.Text.Trim();
+                // Safe access to PortalUser
+                if (PortalUser.Current != null)
                 {
-                    TaskInfo taskInfo = new TaskInfo();
-                    taskInfo.LevelId = templateInfo.LevelId;
-                    taskInfo.ApproveId = templateInfo.ApproveId;
-                    taskInfo.DocumentId = documentInfo.Id;
-                    taskInfo.TaskStatusId = 2;
-                    taskInfo.TaskTypeId = 1;
-                    taskInfo.ApprovalStatusId = 3;
-                    taskInfo.UserId = templateInfo.UserId;
-                    taskInfo.Description = "Auto Generated Task";
-                    taskInfo.AltDescription = "Auto Generated Task";
-                    taskInfo.Active = templateInfo.Active;
-                    TaskManager.Insert(taskInfo);
+                    documentInfo.CreatedId = PortalUser.Current.UserId;
+                    documentInfo.UpdatedId = PortalUser.Current.UserId;
+                }
+                else
+                {
+                     // Fallback or throw
+                     documentInfo.CreatedId = 1; // Default/Admin
+                     documentInfo.UpdatedId = 1;
                 }
                 
-                TaskInfo nextTask =  TaskManager.GetNextTask(documentInfo.Id);
-                if (nextTask != null)
+                documentInfo.CreatedTime = DateTime.Now;
+                documentInfo.UpdatedTime = DateTime.Now;
+                documentInfo.DocumentStatusId = 2;
+                documentInfo.AmendNo = 0;
+
+                documentInfo.Primary = FileManager.GenerateUniqueName(FileType.Passport);
+                documentInfo.AltDescription = FileManager.GenerateUniqueName(FileType.Passport);
+
+                if (fupOne.HasFile)
                 {
-                    nextTask.TaskStatusId = 1;
-                    nextTask.ApprovalStatusId = 3;
-                    nextTask.CreatedTime = DateTime.Now;
-                    TaskManager.Update_Start_Time(nextTask);
+                    documentInfo.One = FileManager.GenerateUniqueName(FileType.Passport);
+                    documentInfo.OneName = txtOne.Text.ToString();
                 }
-                Response.Write("<script type='text/javascript'>");
-                Response.Write("alert('Successfully Created! Document NO " + documentInfo.Name+ "');");
-                Response.Write("document.location.href='../Document/List.aspx';");
-                Response.Write("</script>");
-                textwriter(documentInfo);
+                if (fupTwo.HasFile)
+                {
+                    documentInfo.Two = FileManager.GenerateUniqueName(FileType.Passport);
+                    documentInfo.TwoName = txtTwo.Text.ToString();
+                }
+                if (fupThree.HasFile)
+                {
+                    documentInfo.Three = FileManager.GenerateUniqueName(FileType.Passport);
+                    documentInfo.ThreeName = txtThree.Text.ToString();
+                }
+                if (fupFour.HasFile)
+                {
+                    documentInfo.Four = FileManager.GenerateUniqueName(FileType.Passport);
+                    documentInfo.FourName = txtFour.Text.ToString();
+                }
+                if (fupFive.HasFile)
+                {
+                    documentInfo.Five = FileManager.GenerateUniqueName(FileType.Passport);
+                    documentInfo.FiveName = txtFive.Text.ToString();
+                }
+                if (fupSix.HasFile)
+                {
+                    documentInfo.Six = FileManager.GenerateUniqueName(FileType.Passport);
+                    documentInfo.SixName = txtSix.Text.ToString();
+                }
+
+                byte result = DocumentManager.Insert(documentInfo);
+                if (result == 1)
+                {
+                    SaveFiles(documentInfo);
+                    Insert_Create_Task(documentInfo.Id);
+                    foreach (TemplateInfo templateInfo in templateInfoCollection)
+                    {
+                        TaskInfo taskInfo = new TaskInfo();
+                        taskInfo.LevelId = templateInfo.LevelId;
+                        taskInfo.ApproveId = templateInfo.ApproveId;
+                        taskInfo.DocumentId = documentInfo.Id;
+                        taskInfo.TaskStatusId = 2;
+                        taskInfo.TaskTypeId = 1;
+                        taskInfo.ApprovalStatusId = 3;
+                        taskInfo.UserId = templateInfo.UserId;
+                        taskInfo.Description = "Auto Generated Task";
+                        taskInfo.AltDescription = "Auto Generated Task";
+                        taskInfo.Active = templateInfo.Active;
+                        TaskManager.Insert(taskInfo);
+                    }
+                    
+                    TaskInfo nextTask =  TaskManager.GetNextTask(documentInfo.Id);
+                    if (nextTask != null)
+                    {
+                        nextTask.TaskStatusId = 1;
+                        nextTask.ApprovalStatusId = 3;
+                        nextTask.CreatedTime = DateTime.Now;
+                        TaskManager.Update_Start_Time(nextTask);
+                    }
+                    Response.Write("<script type='text/javascript'>");
+                    Response.Write("alert('Successfully Created! Document NO " + documentInfo.Name+ "');");
+                    Response.Write("document.location.href='../Document/List.aspx';");
+                    Response.Write("</script>");
+                    textwriter(documentInfo);
+                }
             }
+        }
+        catch (Exception ex)
+        {
+             Response.Write("<script>alert('Error in btnSave_Click: " + ex.Message.Replace("'", "\\'") + "');</script>");
         }
     }
 

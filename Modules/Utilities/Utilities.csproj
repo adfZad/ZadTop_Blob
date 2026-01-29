@@ -148,6 +148,19 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
+  <PropertyGroup>
+    <PostBuildEvent>
+      xcopy /Y "$(TargetDir)System.Diagnostics.DiagnosticSource.dll" "$(SolutionDir)Portal\Bin\"
+      xcopy /Y "$(TargetDir)System.Text.Encodings.Web.dll" "$(SolutionDir)Portal\Bin\"
+      xcopy /Y "$(TargetDir)System.Runtime.CompilerServices.Unsafe.dll" "$(SolutionDir)Portal\Bin\"
+      xcopy /Y "$(TargetDir)System.Memory.dll" "$(SolutionDir)Portal\Bin\"
+      xcopy /Y "$(TargetDir)System.Buffers.dll" "$(SolutionDir)Portal\Bin\"
+      xcopy /Y "$(TargetDir)System.Threading.Tasks.Extensions.dll" "$(SolutionDir)Portal\Bin\"
+      xcopy /Y "$(TargetDir)System.ValueTuple.dll" "$(SolutionDir)Portal\Bin\"
+      xcopy /Y "$(TargetDir)ZadHolding.Utilities.dll" "$(SolutionDir)Portal\Bin\"
+      xcopy /Y "$(TargetDir)ZadHolding.Utilities.pdb" "$(SolutionDir)Portal\Bin\"
+    </PostBuildEvent>
+  </PropertyGroup>
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">

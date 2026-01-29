@@ -151,26 +151,13 @@ public partial class ceo_Tools_DashBoard : System.Web.UI.Page
 
     protected string DocPathMethod(string fileName)
     {
-        string path = "#";
-        string localPath = "";
+        string path = "about:blank";
 
-        if (!string.IsNullOrEmpty(fileName))
+        if (!string.IsNullOrEmpty(fileName) && FileManager.FileExists(FileType.Passport, fileName))
         {
-            path = string.Format("../../{0}/{1}/{2}/{3}/{4}",
-                WebConfigKeys.UploadImageRootDirectory,
-                FileType.Passport,
-                fileName.Substring(0, 1),
-                fileName.Substring(0, 2),
-                fileName);
-
-            localPath = Server.MapPath(path);
-
-            if (!File.Exists(localPath))
-            {
-                path = "#";
-            }
+             path = FileManager.GetSourceDirectory(FileType.Passport, fileName);
         }
-
+      
         return path;
 
     }
@@ -226,6 +213,10 @@ public partial class ceo_Tools_DashBoard : System.Web.UI.Page
 
     public void AddTextToPdf(string inputPdfPath, string outputPdfPath, string textToAdd, System.Drawing.Point point, TaskInfoCollection taskInfoCollection, long totalRows)
     {
+        if (inputPdfPath.Contains("#") || !File.Exists(inputPdfPath))
+        {
+             return;
+        }
 
         string pathin = inputPdfPath;
         string pathout = outputPdfPath;

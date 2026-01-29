@@ -48,7 +48,7 @@ namespace ZadHolding.Utilities
 
         public void SaveFile(Stream stream, string directory, string fileName, System.Collections.Generic.Dictionary<string, string> metadata = null)
         {
-            string blobPath = Path.Combine(directory, fileName).Replace("\\", "/");
+            string blobPath = GetBlobPath(directory, fileName);
             
             BlobServiceClient blobServiceClient = new BlobServiceClient(_connectionString);
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
@@ -70,20 +70,43 @@ namespace ZadHolding.Utilities
             blobClient.Upload(stream, options);
         }
 
+        private string GetBlobPath(string directory, string fileName)
+        {
+            // Normalize directory: replace backslashes, remove trailing slashes
+            string cleanDir = directory.Replace("\\", "/").TrimEnd('/');
+            string cleanName = fileName.Replace("\\", "/").TrimStart('/');
+            return string.Format("{0}/{1}", cleanDir, cleanName);
+        }
+
         public string GetFileUrl(string directory, string fileName)
         {
-            string blobPath = Path.Combine(directory, fileName).Replace("\\", "/");
+            string blobPath = GetBlobPath(directory, fileName);
             
             BlobServiceClient blobServiceClient = new BlobServiceClient(_connectionString);
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
             BlobClient blobClient = containerClient.GetBlobClient(blobPath);
             
-            return blobClient.Uri.ToString();
+            if (blobClient.CanGenerateSasUri)
+            {
+                // Create a SAS token that's valid for 1 hour
+                // Set StartsOn to 15 minutes in the past to avoid "not yet valid" errors due to clock skew
+                var sasBuilder = new Azure.Storage.Sas.BlobSasBuilder(Azure.Storage.Sas.BlobSasPermissions.Read, DateTimeOffset.UtcNow.AddHours(1))
+                {
+                    StartsOn = DateTimeOffset.UtcNow.AddMinutes(-15)
+                };
+                
+                Uri sasUri = blobClient.GenerateSasUri(sasBuilder);
+                return sasUri.ToString();
+            }
+            else
+            {
+                 return blobClient.Uri.ToString();
+            }
         }
 
         public bool FileExists(string directory, string fileName)
         {
-            string blobPath = Path.Combine(directory, fileName).Replace("\\", "/");
+            string blobPath = GetBlobPath(directory, fileName);
             
             BlobServiceClient blobServiceClient = new BlobServiceClient(_connectionString);
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
@@ -94,7 +117,7 @@ namespace ZadHolding.Utilities
 
         public Stream GetFileStream(string directory, string fileName)
         {
-            string blobPath = Path.Combine(directory, fileName).Replace("\\", "/");
+            string blobPath = GetBlobPath(directory, fileName);
             
             BlobServiceClient blobServiceClient = new BlobServiceClient(_connectionString);
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_containerName);

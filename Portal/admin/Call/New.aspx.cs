@@ -41,25 +41,33 @@ public partial class admin_Call_New : System.Web.UI.Page
     {
         try
         {
+            var metadata = new Dictionary<string, string>
+            {
+                { "RequestDate", DateTime.Now.ToString("yyyy-MM-dd") },
+                { "RequestStatus", "Pending" },
+                { "UploadedBy", PortalUser.Current.UserId.ToString() }
+            };
 
-            FileManager.SaveFile(fupImage, FileType.Photo, documentInfo.Primary);
+            FileManager.SaveFile(fupImage, FileType.Photo, documentInfo.Primary, metadata);
             //FileManager.SaveFile(fupImage, FileType.Photo, documentInfo.AltDescription);
             if (fupOne.HasFile)
-                FileManager.SaveFile(fupOne, FileType.Photo, documentInfo.One);
+                FileManager.SaveFile(fupOne, FileType.Photo, documentInfo.One, metadata);
             if (fupTwo.HasFile)
-                FileManager.SaveFile(fupTwo, FileType.Photo, documentInfo.Two);
+                FileManager.SaveFile(fupTwo, FileType.Photo, documentInfo.Two, metadata);
             if (fupThree.HasFile)
-                FileManager.SaveFile(fupThree, FileType.Photo, documentInfo.Three);
+                FileManager.SaveFile(fupThree, FileType.Photo, documentInfo.Three, metadata);
             if (fupFour.HasFile)
-                FileManager.SaveFile(fupFour, FileType.Photo, documentInfo.Four);
+                FileManager.SaveFile(fupFour, FileType.Photo, documentInfo.Four, metadata);
             if (fupFive.HasFile)
-                FileManager.SaveFile(fupFive, FileType.Photo, documentInfo.Five);
+                FileManager.SaveFile(fupFive, FileType.Photo, documentInfo.Five, metadata);
             if (fupSix.HasFile)
-                FileManager.SaveFile(fupSix, FileType.Photo, documentInfo.Six);
+                FileManager.SaveFile(fupSix, FileType.Photo, documentInfo.Six, metadata);
 
         }
-        catch
-        { }
+        catch (Exception ex)
+        {
+            Response.Write("<script>alert('Error in SaveFiles: " + ex.Message.Replace("'", "\\'") + "');</script>");
+        }
     }
 
     protected void cvImage_ServerValidate(object source, ServerValidateEventArgs args)
@@ -105,88 +113,94 @@ public partial class admin_Call_New : System.Web.UI.Page
 
     protected void btnSave_Click(object sender, EventArgs e)
     {
-        if (Page.IsValid)
+        try
         {
-            DocumentInfo documentInfo = new DocumentInfo();
-
-            long lvalue = 0;
-            
-
-            documentInfo.Name = "ddadas123";
-
-            long.TryParse(ddlUser.SelectedItem.Value, out lvalue);
-            documentInfo.FlowId = lvalue;
-
-            long.TryParse(ddlType.SelectedItem.Value, out lvalue);
-            documentInfo.TypeId = lvalue;
-
-            long.TryParse(ddlAssign.SelectedItem.Value, out lvalue);
-            documentInfo.AmendNo = lvalue;
-
-            //decimal.TryParse(txtAmount.Text.Trim(), out dvalue);
-            documentInfo.Amount = 0;
-
-            documentInfo.Active = true;
-            documentInfo.Description = txtDesc.InnerText.Trim();
-            //documentInfo.Purpose = txtPurpose.Text.Trim();
-            //documentInfo.AltDescription = txtDesc.InnerText.Trim();
-            documentInfo.CreatedId = PortalUser.Current.UserId;
-            documentInfo.CreatedTime = DateTime.Now;
-            documentInfo.UpdatedId = PortalUser.Current.UserId;
-            documentInfo.UpdatedTime = DateTime.Now;
-            documentInfo.DocumentStatusId = 2;
-            //documentInfo.AmendNo = 0;
-           
-            //documentInfo.Primary = FileManager.GenerateUniqueName(FileType.Passport);
-            //documentInfo.AltDescription = FileManager.GenerateUniqueName(FileType.Passport);
-            if (fupImage.HasFile)
+            if (Page.IsValid)
             {
+                DocumentInfo documentInfo = new DocumentInfo();
+
+                long lvalue = 0;
                 
-                documentInfo.Primary = FileManager.GenerateUniqueName(FileType.Photo);
-                documentInfo.AltDescription = txtMain.Text.ToString(); 
-            }
+                documentInfo.Name = txtMain.Text.Trim(); // REPLACED HARDCODED VALUE
 
-            if (fupOne.HasFile)
-            {
-                documentInfo.One = FileManager.GenerateUniqueName(FileType.Photo);
-                documentInfo.OneName = txtOne.Text.ToString();
-            }
-            if (fupTwo.HasFile)
-            {
-                documentInfo.Two = FileManager.GenerateUniqueName(FileType.Photo);
-                documentInfo.TwoName = txtTwo.Text.ToString();
-            }
-            if (fupThree.HasFile)
-            {
-                documentInfo.Three = FileManager.GenerateUniqueName(FileType.Photo);
-                documentInfo.ThreeName = txtThree.Text.ToString();
-            }
-            if (fupFour.HasFile)
-            {
-                documentInfo.Four = FileManager.GenerateUniqueName(FileType.Photo);
-                documentInfo.FourName = txtFour.Text.ToString();
-            }
-            if (fupFive.HasFile)
-            {
-                documentInfo.Five = FileManager.GenerateUniqueName(FileType.Photo);
-                documentInfo.FiveName = txtFive.Text.ToString();
-            }
-            if (fupSix.HasFile)
-            {
-                documentInfo.Six = FileManager.GenerateUniqueName(FileType.Photo);
-                documentInfo.SixName = txtSix.Text.ToString();
-            }
+                long.TryParse(ddlUser.SelectedItem.Value, out lvalue);
+                documentInfo.FlowId = lvalue;
 
-            byte result = DocumentManager.Insert(documentInfo);
-            if (result == 1)
-            {
-                SaveFiles(documentInfo);
-                Response.Write("<script type='text/javascript'>");
-                Response.Write("alert('Successfully Created! Document NO " + documentInfo.Name + "');");
-                Response.Write("document.location.href='../Document/List.aspx';");
-                Response.Write("</script>");
-               
+                long.TryParse(ddlType.SelectedItem.Value, out lvalue);
+                documentInfo.TypeId = lvalue;
+
+                long.TryParse(ddlAssign.SelectedItem.Value, out lvalue);
+                documentInfo.AmendNo = lvalue;
+
+                //decimal.TryParse(txtAmount.Text.Trim(), out dvalue);
+                documentInfo.Amount = 0;
+
+                documentInfo.Active = true;
+                documentInfo.Description = txtDesc.InnerText.Trim();
+                //documentInfo.Purpose = txtPurpose.Text.Trim();
+                //documentInfo.AltDescription = txtDesc.InnerText.Trim();
+                documentInfo.CreatedId = PortalUser.Current.UserId;
+                documentInfo.CreatedTime = DateTime.Now;
+                documentInfo.UpdatedId = PortalUser.Current.UserId;
+                documentInfo.UpdatedTime = DateTime.Now;
+                documentInfo.DocumentStatusId = 2;
+                //documentInfo.AmendNo = 0;
+            
+                //documentInfo.Primary = FileManager.GenerateUniqueName(FileType.Passport);
+                //documentInfo.AltDescription = FileManager.GenerateUniqueName(FileType.Passport);
+                if (fupImage.HasFile)
+                {
+                    
+                    documentInfo.Primary = FileManager.GenerateUniqueName(FileType.Photo);
+                    documentInfo.AltDescription = txtMain.Text.ToString(); 
+                }
+
+                if (fupOne.HasFile)
+                {
+                    documentInfo.One = FileManager.GenerateUniqueName(FileType.Photo);
+                    documentInfo.OneName = txtOne.Text.ToString();
+                }
+                if (fupTwo.HasFile)
+                {
+                    documentInfo.Two = FileManager.GenerateUniqueName(FileType.Photo);
+                    documentInfo.TwoName = txtTwo.Text.ToString();
+                }
+                if (fupThree.HasFile)
+                {
+                    documentInfo.Three = FileManager.GenerateUniqueName(FileType.Photo);
+                    documentInfo.ThreeName = txtThree.Text.ToString();
+                }
+                if (fupFour.HasFile)
+                {
+                    documentInfo.Four = FileManager.GenerateUniqueName(FileType.Photo);
+                    documentInfo.FourName = txtFour.Text.ToString();
+                }
+                if (fupFive.HasFile)
+                {
+                    documentInfo.Five = FileManager.GenerateUniqueName(FileType.Photo);
+                    documentInfo.FiveName = txtFive.Text.ToString();
+                }
+                if (fupSix.HasFile)
+                {
+                    documentInfo.Six = FileManager.GenerateUniqueName(FileType.Photo);
+                    documentInfo.SixName = txtSix.Text.ToString();
+                }
+
+                byte result = DocumentManager.Insert(documentInfo);
+                if (result == 1)
+                {
+                    SaveFiles(documentInfo);
+                    Response.Write("<script type='text/javascript'>");
+                    Response.Write("alert('Successfully Created! Document NO " + documentInfo.Name + "');");
+                    Response.Write("document.location.href='../Document/List.aspx';");
+                    Response.Write("</script>");
+                
+                }
             }
+        }
+        catch (Exception ex)
+        {
+             Response.Write("<script>alert('Error in btnSave_Click: " + ex.Message.Replace("'", "\\'") + "');</script>");
         }
     }
 

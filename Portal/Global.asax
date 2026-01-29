@@ -8,6 +8,9 @@
 
     void Application_Start(object sender, EventArgs e)
     {
+         // Force TLS 1.2 for Azure Storage
+         System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
          // Set the provider factory for Enterprise Library
         DatabaseProviderFactory factory = new DatabaseProviderFactory();
         DatabaseFactory.SetDatabaseProviderFactory(factory);
